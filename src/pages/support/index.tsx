@@ -20,7 +20,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Store & Actions Imports
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchData, deleteInvoice } from 'src/store/apps/invoice'
+import { fetchData } from 'src/store/apps/invoice'
 
 // ** Types Imports
 import { RootState, AppDispatch } from 'src/store'
@@ -33,16 +33,12 @@ import { getInitials } from 'src/@core/utils/get-initials'
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import OptionsMenu from 'src/@core/components/option-menu'
-import CrmAward from 'src/views/dashboards/crm/CrmAward'
-import CrmTotalProfit from 'src/views/dashboards/crm/CrmTotalProfit'
-import CrmTotalGrowth from 'src/views/dashboards/crm/CrmTotalGrowth'
+import SupportIssueTotal from 'src/views/support/SupportIssueTotal'
+import SupportCardStatics from 'src/views/support/SupportCardStatics'
 
 // ** Styled Components
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
-
-// ** Custom Component Import
-import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
+import SupportCardPieTotal from 'src/views/support/SupportCardPieTotal'
 
 interface InvoiceStatusObj {
   [key: string]: {
@@ -222,36 +218,11 @@ const SupportDashbord = () => {
       headerName: 'Actions',
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title='Delete Invoice'>
-            <IconButton size='small' sx={{ mr: 0.5 }} onClick={() => dispatch(deleteInvoice(row.id))}>
-              <Icon icon='mdi:delete-outline' />
+          <Tooltip title='Send Message'>
+            <IconButton size='small' sx={{ mr: 0.5 }} onClick={() => alert('Send Message : '+row.id)}>
+              <Icon icon='carbon:send-alt' />
             </IconButton>
           </Tooltip>
-          <Tooltip title='View'>
-            <IconButton size='small' component={Link} sx={{ mr: 0.5 }} href={`/apps/invoice/preview/${row.id}`}>
-              <Icon icon='mdi:eye-outline' />
-            </IconButton>
-          </Tooltip>
-          <OptionsMenu
-            iconProps={{ fontSize: 20 }}
-            iconButtonProps={{ size: 'small' }}
-            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-            options={[
-              {
-                text: 'Download',
-                icon: <Icon icon='mdi:download' fontSize={20} />
-              },
-              {
-                text: 'Edit',
-                href: `/apps/invoice/edit/${row.id}`,
-                icon: <Icon icon='mdi:pencil-outline' fontSize={20} />
-              },
-              {
-                text: 'Duplicate',
-                icon: <Icon icon='mdi:content-copy' fontSize={20} />
-              }
-            ]}
-          />
         </Box>
       )
     }
@@ -261,33 +232,30 @@ const SupportDashbord = () => {
     <DatePickerWrapper>
       <Grid container spacing={6}>
       <Grid item xs={12} md={4}>
-          <CrmAward />
+          <SupportIssueTotal />
         </Grid>
-        <Grid item xs={6} sm={3} md={2}>
-          <CardStatisticsVertical
-            stats='155k'
-            color='primary'
-            trendNumber='+22%'
-            title='Total Orders'
-            chipText='Last 4 Month'
-            icon={<Icon icon='mdi:cart-plus' />}
-          />
-        </Grid>
-        <Grid item xs={6} sm={3} md={2}>
-          <CardStatisticsVertical
-            stats='$13.4k'
+        <Grid item xs={6} sm={3} md={3}>
+          <SupportCardStatics
+            stats='10'
             color='success'
+            trendNumber='+22%'
+            title='Task Open'
+            chipText='Today'
+            icon={<Icon icon='pajamas:issue-new' />}
+          />
+        </Grid>
+        <Grid item xs={6} sm={3} md={3}>
+          <SupportCardStatics
+            stats='15'
+            color='primary'
             trendNumber='+38%'
-            title='Total Sales'
-            chipText='Last Six Month'
-            icon={<Icon icon='mdi:currency-usd' />}
+            title='Task Total'
+            chipText='Last 1 Month'
+            icon={<Icon icon='pajamas:issue-update' />}
           />
         </Grid>
         <Grid item xs={6} sm={3} md={2}>
-          <CrmTotalProfit />
-        </Grid>
-        <Grid item xs={6} sm={3} md={2}>
-          <CrmTotalGrowth />
+          <SupportCardPieTotal />
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -296,7 +264,6 @@ const SupportDashbord = () => {
               pagination
               rows={store.data}
               columns={columns}
-              checkboxSelection
               disableSelectionOnClick
               pageSize={10}
               rowsPerPageOptions={[10, 25, 50]}
